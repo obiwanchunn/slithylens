@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>SlithyLens</AssemblyName>
+    <RootNamespace>SlithyLens</RootNamespace>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <Product>SlithyLens</Product>
+    <Description>HEIC viewer, cropper and JPG converter</Description>
+    <!-- Bump both with each release: Version's last number is the build (v005 = 1.0.5). -->
+    <Version>1.0.5</Version>
+    <InformationalVersion>v005 (2026-11-08)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- lets the single-file exe carry ImageMagick's native DLL (HEIC decoder included) -->
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ImageMagick for .NET: reads HEIC/HEIF (libheif built in), writes JPEG, does the perspective unwarp -->
+    <PackageReference Include="Magick.NET-Q8-x64" Version="15.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="app.ico" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SlithyLens">
+<meta name="theme-color" content="#1e1e1e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<title>SlithyLens</title>
+<style>
+  :root {
+    --bg: #1e1e1e; --bar: #2b2b2b; --line: #3a3a3a; --text: #e8e8e8; --dim: #9a9a9a;
+    --btn: #3a3a3a; --accent: #2e6fb5; --accent-line: #4c8fd6;
+    --safe-t: env(safe-area-inset-top); --safe-b: env(safe-area-inset-bottom);
+    --safe-l: env(safe-area-inset-left); --safe-r: env(safe-area-inset-right);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+    font: 15px -apple-system, "Segoe UI", system-ui, sans-serif; overflow: hidden;
+    overscroll-behavior: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  body { position: fixed; inset: 0; display: flex; flex-direction: column; }
+
+  header { display: flex; align-items: center; gap: 8px; background: var(--bar);
+    border-bottom: 1px solid var(--line);
+    padding: calc(var(--safe-t) + 6px) calc(var(--safe-r) + 8px) 6px calc(var(--safe-l) + 8px); }
+  #title { flex: 1; min-width: 0; text-align: center; font-weight: 600; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; }
+
+  main { position: relative; flex: 1; min-height: 0; }
+  #view { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; display: block; }
+  #empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 18px; color: var(--dim); text-align: center; padding: 24px; }
+  #empty img { width: 150px; height: 150px; }
+  #empty .big { font-size: 18px; padding: 12px 28px; }
+
+  #status { background: #252525; border-top: 1px solid var(--line); color: #cfcfcf; font-size: 13px;
+    padding: 6px calc(var(--safe-r) + 10px) 6px calc(var(--safe-l) + 10px);
+    display: flex; align-items: center; gap: 10px; min-height: 34px; }
+  #statusText { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  nav { display: flex; gap: 6px; background: var(--bar); border-top: 1px solid var(--line);
+    padding: 8px calc(var(--safe-r) + 8px) calc(var(--safe-b) + 8px) calc(var(--safe-l) + 8px); }
+  nav button { flex: 1; min-width: 0; }
+
+  button { font: inherit; color: var(--text); background: var(--btn); border: 1px solid #4a4a4a;
+    border-radius: 8px; padding: 10px 6px; min-height: 44px; cursor: pointer; }
+  button:active { opacity: .75; }
+  button:disabled { opacity: .35; }
+  button.accent { background: var(--accent); border-color: var(--accent-line); color: #fff; font-weight: 600; }
+  button.small { min-height: 34px; padding: 5px 12px; font-size: 13px; }
+  header button { min-height: 36px; padding: 6px 12px; }
+  [hidden] { display: none !important; }
+
+  dialog { background: #2b2b2b; color: var(--text); border: 1px solid #4a4a4a; border-radius: 14px;
+    max-width: min(92vw, 460px); padding: 18px 20px; }
+  dialog::backdrop { background: rgba(0,0,0,.6); }
+  dialog h2 { margin: 0 0 4px; font-size: 19px; }
+  dialog .ver { color: var(--dim); margin: 0 0 12px; font-size: 13px; }
+  dialog p, dialog li { line-height: 1.4; font-size: 14px; }
+  dialog ul { padding-left: 18px; margin: 6px 0; }
+  dialog .poem { font-style: italic; color: #cfcfcf; }
+  dialog .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+  dialog .head { display: flex; gap: 14px; align-items: center; }
+  dialog .head img { width: 64px; height: 64px; }
+  .busy #view { opacity: .6; }
+</style>
+</head>
+<body>
+  <header>
+    <button id="backBtn" hidden>‹ Back</button>
+    <div id="title">SlithyLens</div>
+    <button id="menuBtn" aria-label="Menu">⋯</button>
+  </header>
+
+  <main>
+    <canvas id="view"></canvas>
+    <div id="empty">
+      <img src="icons/tove.svg" alt="">
+      <div>Open a photo to get started.</div>
+      <button id="emptyOpenBtn" class="accent big">Open a photo</button>
+    </div>
+  </main>
+
+  <div id="status">
+    <span id="statusText"></span>
+    <button id="saveBtn" class="accent small" hidden>Save…</button>
+  </div>
+
+  <nav id="tools">
+    <button id="openBtn">Open</button>
+    <button id="jpgBtn">JPG</button>
+    <button id="smallBtn">Small</button>
+    <button id="cropBtn">Crop</button>
+    <button id="lensBtn">Lens</button>
+  </nav>
+  <nav id="editBar" hidden>
+    <button id="cancelBtn">Cancel</button>
+    <button id="applyBtn" class="accent">Done</button>
+  </nav>
+
+  <input type="file" id="fileInput" accept="image/*,.heic,.heif" hidden>
+
+  <dialog id="menu">
+    <div class="head">
+      <img src="icons/tove.svg" alt="">
+      <div>
+        <h2>SlithyLens</h2>
+        <p class="ver" id="versionText"></p>
+      </div>
+    </div>
+    <p class="poem">’Twas brillig, and the slithy toves<br>Did gyre and gimble in the wabe…</p>
+    <ul>
+      <li><b>JPG</b> → name.jpg · <b>Small</b> → name_small.jpg (JPG, 500 KB or less)</li>
+      <li><b>Crop</b> → name_crop.jpg · <b>Lens</b> → name_lens.jpg (four corners straightened)</li>
+      <li>Each result opens so you can check it. Tap <b>Save…</b> to put it in Files (keeps the name) or Photos.</li>
+      <li>Pinch to zoom, drag to pan, double-tap for fit / 100%. Drag crop edges or lens corners; a magnifier shows where they sit.</li>
+      <li><b>‹ Back</b> returns to the photo you made it from.</li>
+    </ul>
+    <p style="color:var(--dim);font-size:13px">Photos never leave your phone. Saved copies don't carry the original's date or location.</p>
+    <div class="row">
+      <button id="reloadBtn" class="small">Check for update</button>
+      <button id="closeMenuBtn" class="small accent">Close</button>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
