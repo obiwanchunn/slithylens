@@ -8,7 +8,7 @@ or whiteboard from four corners, the way Office Lens did.
 
 | Folder | What | Version |
 |---|---|---|
-| [`docs/`](docs) | **iPhone** web app — add it to the Home Screen; works offline. *(Not documentation — see below.)* | iPhone v001 |
+| [`docs/`](docs) | **iPhone** web app — add it to the Home Screen; works offline. *(Not documentation — see below.)* | iPhone v002 |
 | [`windows/`](windows) | **Windows** app — C# / .NET 10 WPF, build with `build.cmd` | v005 |
 
 > **Why is the iPhone app in a folder called `docs`?** GitHub Pages' simple "Deploy from a
@@ -37,7 +37,8 @@ so 24/48 MP photos are worked on at that size (crops still come from the full-si
 
 Files: `index.html` (layout), `app.js` (everything else), `sw.js` (offline), `manifest.webmanifest`
 and `icons/` (Home Screen). No build step, no libraries. When releasing, bump `VERSION` in
-`app.js` and `CACHE` in `sw.js` together.
+`app.js`, the `?v=` on `app.js` in `index.html`, and `CACHE` in `sw.js` together. (GitHub Pages lets
+browsers reuse files for 10 minutes; the new `?v=` makes phones fetch the new app.js at once.)
 
 ## Windows
 

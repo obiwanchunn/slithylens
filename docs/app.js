@@ -2,7 +2,7 @@
 // Everything happens on the phone: photos are never uploaded anywhere.
 'use strict';
 
-const VERSION = 'iPhone v001 (2026-11-09)';
+const VERSION = 'iPhone v002 (2026-11-10)';
 
 const FULL_QUALITY = 0.92;            // name.jpg, name_crop.jpg, name_lens.jpg
 const SMALL_LIMIT = 500000;           // bytes; fits both "500 KB" conventions
@@ -750,8 +750,8 @@ document.addEventListener('gesturestart', e => e.preventDefault());
 document.addEventListener('dblclick', e => e.preventDefault());
 
 // ------------------------------------------------------------------ offline support
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  navigator.serviceWorker.register('sw.js').catch(() => { /* still works online */ });
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => { /* still works online */ });
 }
 
 updateUi();
