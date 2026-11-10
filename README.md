@@ -8,8 +8,14 @@ or whiteboard from four corners, the way Office Lens did.
 
 | Folder | What | Version |
 |---|---|---|
-| [`docs/`](docs) | **iPhone** web app — add it to the Home Screen; works offline | iPhone v001 |
+| [`docs/`](docs) | **iPhone** web app — add it to the Home Screen; works offline. *(Not documentation — see below.)* | iPhone v001 |
 | [`windows/`](windows) | **Windows** app — C# / .NET 10 WPF, build with `build.cmd` | v005 |
+
+> **Why is the iPhone app in a folder called `docs`?** GitHub Pages' simple "Deploy from a
+> branch" setting can only publish the top of the repo or a folder named exactly `docs`. So the
+> iPhone app lives in `docs/` even though it isn't documentation. Pages setting:
+> **Settings → Pages → Deploy from a branch → `main` → `/docs`**. Renaming the folder would break
+> the site unless Pages is switched to a GitHub Actions workflow.
 
 ## iPhone
 
