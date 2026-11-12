@@ -19,6 +19,19 @@ the two install side by side.) `winget install Microsoft.DotNet.SDK.10` installs
 
 `build.cmd standalone` makes a bigger exe that runs on a PC without .NET installed.
 
+## Install (optional)
+
+`publish\SlithyLens.exe` runs from anywhere. To put it in `C:\Program Files\SlithyLens`, run
+
+```
+.\install.cmd
+```
+
+after `build.cmd`. Windows asks for administrator permission (Program Files needs it) and the copy
+happens in a second window. Close SlithyLens first if it's open, then open the installed copy
+once so **Open with** / **Edit with** point at it. Use that copy from then on: opening
+`publish\SlithyLens.exe` again would point them back at the build folder.
+
 ## Open with / Edit with (defaults untouched)
 
 Once, open SlithyLens and click **⋯** → **Add SlithyLens to Open with and Edit with (.heic, .jpg, .png)…**.
