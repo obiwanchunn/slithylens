@@ -43,5 +43,6 @@ browsers reuse files for 10 minutes; the new `?v=` makes phones fetch the new ap
 ## Windows
 
 See [`windows/README.md`](windows/README.md). In short: install the .NET 10 SDK, run
-`windows\build.cmd`, open `windows\publish\SlithyLens.exe`, then **⋯ → Add SlithyLens to Open
+`windows\build.cmd` (and, if you like, `windows\install.cmd` to copy it into
+`C:\Program Files\SlithyLens`), open `SlithyLens.exe`, then **⋯ → Add SlithyLens to Open
 with and Edit with**. HEIC decoding is ImageMagick (Magick.NET), so no Store extensions are needed.
